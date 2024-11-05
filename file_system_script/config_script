@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+
+
+
+# Check for package installer script and execute it
+if [[ -x ./package_installer.sh ]]; 
+then
+  echo "Running package installer script"
+  ./package_installer.sh
+else
+  echo "package_installer.sh not found or not executable"
+  exit 1
+fi
+
+
+# Check for symlink script and execute it
+if [[ -x ./config_symlink.sh ]]; 
+then
+  echo "Running symlink creation script"
+  ./config_symlink.sh
+else
+  echo "config_symlink.sh not found or not executable"
+  exit 1
+fi
+
+
+
+echo "Configuration setup complete"
