@@ -2,52 +2,29 @@
 
 
 
-clone_dir=~/acit2420_shell_script/file_system_script/2420-as2-starting-files
 
-#Symbolic link for config files
 
-#symlink bin
-# If the directory ~/bin doesn't exist, create the directory, else echo already exist.
-if [ ! -d ~/bin ];
+# Check for package installer script and execute it
+if [[ -x ./package_installer.sh ]]; 
 then
-  mkdir -p ~/bin # -p creates the directory if it doesn't exist and avoids error message if it exists
-  ln -s $clone_dir/bin/sayhi ~/bin/sayhi
-  ln -s $clone_dir/bin/install-fonts ~/bin/install-fonts
-  echo "~/bin directory created and symlinks connected"
+  echo "Running package installer script"
+  ./package_installer.sh
 else
-  echo "~/bin directory already exists, updating symlink"
-  ln -s $clone_dir/bin/sayhi ~/bin/sayhi
-  ln -s $clone_dir/bin/install-fonts ~/bin/install-fonts
+  echo "package_installer.sh not found or not executable"
+  exit 1
 fi
 
 
-#symlink config
-if [ ! -d ~/.config/kak ];
+# Check for symlink script and execute it
+if [[ -x ./config_symlink.sh ]]; 
 then
-  mkdir -p ~/.config/kak
-  ln -s $clone_dir/config/kak/kakrc ~/.config/kak/kakrc
-  echo "~/.config/kak/kakrc directory created and symlink connected"
+  echo "Running symlink creation script"
+  ./config_symlink.sh
 else
-  echo "~/.config/kak/kakrc already exists, updating symlink"
-  ln -s $clone_dir/config/kak/kakrc ~/.config/kak/kakrc
+  echo "config_symlink.sh not found or not executable"
+  exit 1
 fi
 
-if [ ! -d ~/.config/tmux ];
-then
-  mkdir -p ~/.config/tmux
-  ln -s $clone_dir/config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-  echo "~/.config/tmux/tmux.conf directory created and symlink connected"
-else
-  echo "~/.config/tmux/tmux.conf already exists, updating symlink"
-  ln -s $clone_dir/config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-fi
 
-#symlink home
-if [[ ! -f ~/.bashrc ]];
-then
-  ln -s $clone_dir/home/bashrc ~/.bashrc
-  echo "/home/.bashrc file created and symlink connected"
-else
-  echo "/home/.bashrc file already exists, updating symlink"
-  ln -sf $clone_dir/home/bashrc ~/.bashrc
-fi
+
+echo "Configuration setup complete"

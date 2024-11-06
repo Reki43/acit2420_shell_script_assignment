@@ -2,7 +2,7 @@
 
 
 
-clone_dir=~/file_system_script/
+clone_dir=~/acit2420_shell_script/file_system_script/2420-as2-starting-files
 
 #Symbolic link for config files
 
@@ -22,7 +22,7 @@ fi
 
 
 #symlink config
-if [ ! -d ~/.config/kak/kakrc ];
+if [ ! -d ~/.config/kak ];
 then
   mkdir -p ~/.config/kak
   ln -s $clone_dir/config/kak/kakrc ~/.config/kak/kakrc
@@ -32,7 +32,7 @@ else
   ln -s $clone_dir/config/kak/kakrc ~/.config/kak/kakrc
 fi
 
-if [ ! -d ~/.config/tmux/tmux.conf ];
+if [ ! -d ~/.config/tmux ];
 then
   mkdir -p ~/.config/tmux
   ln -s $clone_dir/config/tmux/tmux.conf ~/.config/tmux/tmux.conf
@@ -43,4 +43,11 @@ else
 fi
 
 #symlink home
-ln -s $clone_dir/home/bashrc ~/.bashrc
+if [[ ! -f ~/.bashrc ]];
+then
+  ln -s $clone_dir/home/bashrc ~/.bashrc
+  echo "/home/.bashrc file created and symlink connected"
+else
+  echo "/home/.bashrc file already exists, updating symlink"
+  ln -sf $clone_dir/home/bashrc ~/.bashrc
+fi
