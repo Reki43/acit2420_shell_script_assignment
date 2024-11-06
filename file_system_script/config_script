@@ -1,30 +1,84 @@
 #!/usr/bin/env bash
 
 
-
-
-
-# Check for package installer script and execute it
-if [[ -x ./package_installer.sh ]]; 
-then
-  echo "Running package installer script"
-  ./package_installer.sh
-else
-  echo "package_installer.sh not found or not executable"
+usage() {
+  echo "Usage: $0 [-h] [-v] [-p] [-s]"
+  echo ""
+  echo "    -h, --help          Display help"
+  echo "    -v, --verbose       Enable verbose output"
+  echo "    -p, --packages      Execute package installer"
+  echo "    -s, --symlink       Execute symlink creation script"
   exit 1
+}
+
+# Default values
+verbose=0
+execute_package_installer=0
+execute_symlink=0
+
+
+# Parse command-line options
+while getopts "hvps" opt;
+do
+  case $opt in
+    h)
+      usage
+      ;;
+    v)
+      verbose=1
+      ;;
+    p)
+      execute_package_installer=1
+      ;;
+    s)
+      execute_symlink=1
+      ;;
+    ?)
+      echo "Invalid option: -$OPTARG"
+      usage
+      ;;
+  esac
+done
+
+
+# Verbose output
+verbose() {
+  if [ "$verbose" -eq "1" ];
+  then
+    echo "$@"
+  fi
+}
+
+# Ensure at least one task is selected
+if [ "$execute_package_installer" -eq 0 ] && [ "$execute_symlink" -eq 0 ];
+then
+  echo "You must select at least one task to execute."
+  usage
+fi
+
+# Run the package installer if selected
+if [ "$execute_package_installer" -eq 1 ];
+then
+  if [[ -x ./package_installer.sh ]];
+  then
+    verbose "Running package installer script"
+    ./package_installer.sh
+  else
+    verbose "package_installer.sh not found or not executable"
+    exit 1
+  fi
 fi
 
 
-# Check for symlink script and execute it
-if [[ -x ./config_symlink.sh ]]; 
+# Run the symlink creation script if selected
+if [ "$execute_symlink" -eq 1 ];
 then
-  echo "Running symlink creation script"
-  ./config_symlink.sh
-else
-  echo "config_symlink.sh not found or not executable"
-  exit 1
+  if [[ -x ./config_symlink.sh ]];
+  then
+    verbose "Running symlink creation script"
+    ./config_symlink.sh
+  else
+    verbose "config_symlink.sh not found or not executable"
+    exit 1
+  fi
 fi
-
-
-
-echo "Configuration setup complete"
