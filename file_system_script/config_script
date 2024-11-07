@@ -1,99 +1,86 @@
 #!/usr/bin/env bash
 
-# Determine the original user's home directory
-if [ "$SUDO_USER" ];
+clone_dir="
+
+
+usage() {
+  echo "Usage: $0 [-h] [-x] [-p] [-s]"
+  echo ""
+  echo "    -h, --help          Display help"
+  echo "    -x  --execute       Excute the main script to install both packages"
+  echo "    -p, --packages      Execute package installer"
+  echo "    -s, --symlink       Execute symlink creation script"
+  exit 1
+}
+
+# Default values
+execute_package_installer=0
+execute_symlink=0
+
+
+# Parse command-line options
+while getopts ":hxps" opt;
+do
+  case $opt in
+    h)
+      usage
+      ;;
+    x)
+      execute_package_installer=1 && execute_symlink=1
+      ;;
+    p)
+      execute_package_installer=1
+      ;;
+    s)
+      execute_symlink=1
+      ;;
+    ?)
+      echo "Invalid option: -$OPTARG"
+      usage
+      ;;
+  esac
+done
+
+
+# Check if no options were provided
+if [[ $OPTIND -eq 1 ]];
 then
-  # If the script is run with sudo, set USER_HOME to the home directory of the user who invoked sudo
-  USER_HOME="/home/$SUDO_USER"
-  echo "Script is being run with sudo by user $SUDO_USER"
-elif
-  # If the script is run by the root user directly
-  [ "$EUID" -eq 0 ];
+  echo "NOTE: Make sure to use sudo when executing with -x or -p"
+  usage
+fi
+
+
+# Runs both scripts if option -x is selected. It runs both scripts
+if [ "$execute_package_installer" -eq 1 ] && [ "$execute_symlink" -eq 1 ];
+then
+  echo "Running both scripts..."
+  ./package_installer.sh && ./config_symlink.sh
+fi
+
+
+# Run the package installer if selected
+if [ "$execute_package_installer" -eq 1 ];
+then
+  if [[ -x ./package_installer.sh ]];
   then
-    USER_HOME="/root"
-    echo "Script is being run by the root user"
-else
-  # If not run with sudo, set USER_HOME to the current user's home directory
-  USER_HOME=$HOME
-  echo "Script is being run by the current user $USER"
+    echo "Running package installer script..."
+    ./package_installer.sh
+  else
+    echo "package_installer.sh not found or not executable"
+    exit 1
+  fi
 fi
 
 
-clone_dir=$USER_HOME/acit2420_shell_script/file_system_script/2420-as2-starting-files
-
-# Symbolic link for config files
-
-# symlink bin
-# Check if $USER_HOME/bin doesn't exist. If it doesn't created the bin dir, else, say it already exist.
-if [ ! -d $USER_HOME/bin ];
+# Run the symlink creation script if selected
+if [ "$execute_symlink" -eq 1 ];
 then
-  mkdir -p $USER_HOME/bin
-  echo "/bin directory created"
-else
-  echo "/bin directory already exists"
-fi
-
-# Check if the symlink exist with -L option. If it exist, say it exist, else symlink the two and say it has been created.
-if [ -L $USER_HOME/bin/sayhi ];
-then
-  echo "Symlink $USER_HOME/bin/sayhi already exists"
-else
-  ln -s $clone_dir/bin/sayhi $USER_HOME/bin/sayhi
-  echo "Symlink $USER_HOME/bin/sayhi created"
-fi
-
-if [ -L $USER_HOME/bin/install-fonts ];
-then
-  echo "Symlink $USER_HOME/bin/install-fonts already exists"
-else
-  ln -s $clone_dir/bin/install-fonts $USER_HOME/bin/install-fonts
-  echo "Symlink $USER_HOME/bin/install-fonts created"
-fi
-
-# symlink config for kak
-# Check if $USER_HOME/.config/kak doesn't exist. If it doesn't created the .config/kak dir, else, say it already exist.
-if [ ! -d $USER_HOME/.config/kak ];
-then
-  mkdir -p $USER_HOME/.config/kak
-  echo "/.config/kak directory created"
-else
-  echo "/.config/kak directory already exists"
-fi
-
-# If symlink exist, say it exist, else symlink the two and say it has been created.
-if [ -L $USER_HOME/.config/kak/kakrc ];
-then
-  echo "Symlink $USER_HOME/.config/kak/kakrc already exists"
-else
-  ln -s $clone_dir/config/kak/kakrc $USER_HOME/.config/kak/kakrc
-  echo "Symlink $USER_HOME/.config/kak/kakrc created"
-fi
-
-# symlink config for tmux
-# Check if $USER_HOME/.config/tmux doesn't exist. If it doesn't created the .config/tmux dir, else, say it already exist.
-if [ ! -d $USER_HOME/.config/tmux ];
-then
-  mkdir -p $USER_HOME/.config/tmux
-  echo "/.config/tmux directory created"
-else
-  echo "/.config/tmux directory already exists"
-fi
-
-# If symlink exist, say it exist, else symlink the two and say it has been created.
-if [ -L $USER_HOME/.config/tmux/tmux.conf ];
-then
-  echo "Symlink $USER_HOME/.config/tmux/tmux.conf already exists"
-else
-  ln -s $clone_dir/config/tmux/tmux.conf $USER_HOME/.config/tmux/tmux.conf
-  echo "Symlink $USER_HOME/.config/tmux/tmux.conf created"
-fi
-
-# symlink home bashrc
-# If symlink exist, say it exist, else symlink the two and say it has been created.
-if [ -L $USER_HOME/.bashrc ];
-then
-  echo "Symlink $USER_HOME/.bashrc already exists"
-else
-  ln -s $clone_dir/home/bashrc $USER_HOME/.bashrc
-  echo "Symlink $USER_HOME/.bashrc created"
+  if [[ -x ./config_symlink.sh ]];
+  then
+    echo "Running symlink creation script..."
+    ./config_symlink.sh
+  else
+    echo "config_symlink.sh not found or not executable"
+    exit 1
+  fi
 fi
