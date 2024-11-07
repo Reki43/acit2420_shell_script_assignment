@@ -16,7 +16,7 @@ execute_symlink=0
 
 
 # Parse command-line options
-while getopts "hvps" opt;
+while getopts "hps" opt;
 do
   case $opt in
     h)
