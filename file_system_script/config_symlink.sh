@@ -6,6 +6,12 @@ then
   # If the script is run with sudo, set USER_HOME to the home directory of the user who invoked sudo
   USER_HOME="/home/$SUDO_USER"
   echo "Script is being run with sudo by user $SUDO_USER"
+elif
+  # If the script is run by the root user directly
+  [ "$EUID" -eq 0 ];
+  then
+    USER_HOME="/root"
+    echo "Script is being run by the root user"
 else
   # If not run with sudo, set USER_HOME to the current user's home directory
   USER_HOME=$HOME
