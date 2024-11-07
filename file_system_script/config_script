@@ -2,9 +2,10 @@
 
 
 usage() {
-  echo "Usage: $0 [-h] [-p] [-s]"
+  echo "Usage: $0 [-h] [-x] [-p] [-s]"
   echo ""
   echo "    -h, --help          Display help"
+  echo "    -x  --execute       Excute the main script to install both packages"
   echo "    -p, --packages      Execute package installer"
   echo "    -s, --symlink       Execute symlink creation script"
   exit 1
@@ -16,11 +17,14 @@ execute_symlink=0
 
 
 # Parse command-line options
-while getopts ":hps" opt;
+while getopts ":hxps" opt;
 do
   case $opt in
     h)
       usage
+      ;;
+    x)
+      execute_package_installer=1 && execute_symlink=1
       ;;
     p)
       execute_package_installer=1
@@ -36,20 +40,19 @@ do
 done
 
 
-# Runs both scripts if no options are selected
-if [ "$execute_package_installer" -eq 0 ] && [ "$execute_symlink" -eq 0 ];
+# Check if no options were provided
+if [[ $OPTIND -eq 1 ]];
 then
-  echo "Running ./config_scipt..."
-  ./package_installer.sh
-  ./config_symlink.sh
+  echo "NOTE: Make sure to use sudo when executing with -x or -p"
+  usage
 fi
 
-# Runs both scripts if options -p and -s are both selected
+
+# Runs both scripts if option -x is selected. It runs both scripts
 if [ "$execute_package_installer" -eq 1 ] && [ "$execute_symlink" -eq 1 ];
 then
-  echo "Running downloading both scripts..."
-  ./package_installer.sh
-  ./config_symlink.sh
+  echo "Running both scripts..."
+  ./package_installer.sh && ./config_symlink.sh
 fi
 
 
