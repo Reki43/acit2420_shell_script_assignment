@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-clone_dir="
-
 
 usage() {
   echo "Usage: $0 [-h] [-x] [-p] [-s]"
