@@ -2,17 +2,15 @@
 
 
 usage() {
-  echo "Usage: $0 [-h] [-v] [-p] [-s]"
+  echo "Usage: $0 [-h] [-p] [-s]"
   echo ""
   echo "    -h, --help          Display help"
-  echo "    -v, --verbose       Enable verbose output"
   echo "    -p, --packages      Execute package installer"
   echo "    -s, --symlink       Execute symlink creation script"
   exit 1
 }
 
 # Default values
-verbose=0
 execute_package_installer=0
 execute_symlink=0
 
@@ -23,9 +21,6 @@ do
   case $opt in
     h)
       usage
-      ;;
-    v)
-      verbose=1
       ;;
     p)
       execute_package_installer=1
@@ -41,19 +36,13 @@ do
 done
 
 
-# Verbose output
-verbose() {
-  if [ "$verbose" -eq "1" ];
-  then
-    echo "$@"
-  fi
-}
 
-# Ensure at least one task is selected
+# Runs both scripts if no options are selected
 if [ "$execute_package_installer" -eq 0 ] && [ "$execute_symlink" -eq 0 ];
 then
-  echo "You must select at least one task to execute."
-  usage
+  echo "Running ./config_scipt ..."
+  ./package_installer.sh
+  ./config_symlink.sh
 fi
 
 # Run the package installer if selected
@@ -61,10 +50,10 @@ if [ "$execute_package_installer" -eq 1 ];
 then
   if [[ -x ./package_installer.sh ]];
   then
-    verbose "Running package installer script"
+    echo "Running package installer script..."
     ./package_installer.sh
   else
-    verbose "package_installer.sh not found or not executable"
+    echo "package_installer.sh not found or not executable"
     exit 1
   fi
 fi
@@ -75,10 +64,10 @@ if [ "$execute_symlink" -eq 1 ];
 then
   if [[ -x ./config_symlink.sh ]];
   then
-    verbose "Running symlink creation script"
+    echo "Running symlink creation script..."
     ./config_symlink.sh
   else
-    verbose "config_symlink.sh not found or not executable"
+    echo "config_symlink.sh not found or not executable"
     exit 1
   fi
 fi
