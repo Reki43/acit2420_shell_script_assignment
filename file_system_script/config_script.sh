@@ -7,7 +7,7 @@
 # Date: 2024-11-05
 # Version: 1.0
 # Sources:
-#  [1] https://learning.oreilly.com/videos/bash-shell-scripting/9780137689064/9780137689064-BSS2_04_10_01/ -Working with Options
+#  [1] https://learning.oreilly.com/videos/bash-shell-scripting/9780137689064/9780137689064-BSS2_04_10_01/ | Working with Options
 # ==========================================================================================================================
 
 # Function to display usage information and exit. Source: [1]

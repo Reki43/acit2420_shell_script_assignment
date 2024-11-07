@@ -9,7 +9,7 @@
 # Sources:
 #  [1] man sudo | Look at Environment $SUDO_USER - Opens the manual for sudo options and find what $SUDO_USER does
 #  [2] https://www.linode.com/docs/guides/linux-symlinks/ - How to Create Linux Symlinks
-#  [3] man ln | -L -s - Opens the manual for symlink options and find what -L and -s does
+#  [3] man ln | -L -s | Opens the manual for symlink options and find what -L and -s does
 # ==========================================================================================================================
 
 
