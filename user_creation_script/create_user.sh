@@ -57,4 +57,39 @@ shift $(($OPTIND -1))
 # Get the username from the only remaning positional parameter that is a non-option arguement
 username="$1"
 
+# Check if username is provided. -z checks if the variable is empty
+if [ -z "$username" ];
+then
+  echo "Error: Username is required"
+  usage
+fi
+
+# Check if uid is empty, if it is, set uid=1000 as default
+if [ -z "$uid" ];
+then
+  uid=1000
+  while cut -d : -f3 /etc/passwd | grep -x $uid > /dev/null; # Loop to find an unused uid.
+  do
+    uid=$((uid+1)) > /dev/null # Increment uid by 1 if unique uid not found
+  done
+fi
+
+
+if [ -z "$gid" ];
+then
+  gid=$(grep users /etc/group | cut -d: -f3)
+fi
+
+if [ -z "$homedir" ];
+then
+  homedir=/home/$1
+fi
+
+if [ -z "$shell" ];
+then
+  echo "Error: shell is required"
+else
+  shell="/bin/bash"
+fi
+
 
