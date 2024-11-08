@@ -2,32 +2,26 @@
 
 # ==========================================================================================================================
 # Script Name: create_user.sh
-# Description: This script creates a new user on your linux system with include various options for setting user ID, group ID,                    additional groups, user info, home directory, and shell.
+# Description: This script creates a new user on your linux system with include various options for setting user ID, group ID, additional groups, user info, home directory, and shell.
 # Author: Henry Wong
 # Date: 2024-11-07
 # Version: 1.0
 # Sources:
-#  [1] https://learning.oreilly.com/videos/bash-shell-scripting/9780137689064/9780137689064-BSS2_04_10_01/ | Working with Options |   Video example script used for reference
+#  [1] https://learning.oreilly.com/videos/bash-shell-scripting/9780137689064/9780137689064-BSS2_04_10_01/ | Working with Options | Video example script used for reference
 #  [2] https://medium.com/@althubianymalek/uid-and-gid-in-executing-a-binary-120e2f67d317 | Difference between UID and EUID
 #  [3] https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html | Primary expressions with if statements
 #  [4] https://www.geeksforgeeks.org/cut-command-linux-examples/ | cut command in Linux
-#  [5] https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux | Using       Grep & Regular Expressions to Search for Text Patterns
-#  [6] https://www.digitalocean.com/community/tutorials/the-basics-of-using-the-sed-stream-editor-to-manipulate-text-in-linux | The       Basics of Using the Sed Stream Editor to Manipulate Text
+#  [5] https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux | Using Grep & Regular Expressions to Search for Text Patterns
+#  [6] https://www.digitalocean.com/community/tutorials/the-basics-of-using-the-sed-stream-editor-to-manipulate-text-in-linux | The Basics of Using the Sed Stream Editor to Manipulate Text
 #
 #
 # ==========================================================================================================================
 
-# Checks if the Effective User ID is not 0, indicating not root user. Used to determine if the script has root access rights [2].
-if [[ $EUID -ne 0 ]];
-then
-  echo "Please run this script with root privilege."
-  exit 1 # Exit the script with a status of 1 to indicate an error
-fi
 
 # Initialize variables for optional parameters
 uid=""          # Stores the UID specified with -u option if used
 gid=""          # Stores the GID specified with -g option if used
-info=""         # Stores additional information about the user (e.g., full name) from -i option
+info=false      # Initialize info as false to check if -i option is provided
 homedir=""      # Stores custom home directory path if specified with -h option
 shell="/bin/bash"  # Default shell for the user; will be overridden if -s option is used
 username=""     # Variable to store the username specified as a positional argument
@@ -35,21 +29,30 @@ groups=""       # Stores additional groups if specified using the -G option
 
 # Function to display script usage instructions for help [1].
 usage() {
-  echo "Usage: $0 [-u uid] [-g gid] [-G group1 group2 group3] [-i info] [-h homedir] [-s shell] username"
+  echo "Usage: $0 [-u uid] [-g gid] [-G group1 group2 group3] [-i] [-h homedir] [-s shell] username"
   echo ""
   echo "Options:"
   echo "    -u: uid             Specify the user ID (UID) | Omit: Defaults to next available UID"
   echo "    -g: gid             Specify the group ID (GID) | Omit: Defaults to same GID as username's UID"
   echo "    -G: groups          Specify one or more groups | Omit: User will not be added to additional groups"
-  echo "    -i: info            Input user's full name | Not required to "
+  echo "    -i: info            Prompts user to enter user's full name | Omit: Info about user will be null"
   echo "    -h: homedir         Specify home directory | Omit: Defaults to /home/username"
   echo "    -s: shell           Specify login shell | Omit: Defaults to /bin/bash"
   echo "    username            Specify username for new user | Required"
   exit 1  # Exit script after displaying usage
 }
 
+# Checks if the Effective User ID is not 0, indicating not root user. Used to determine if the script has root access rights [2].
+if [[ $EUID -ne 0 ]];
+then
+  echo "Please run this script with root privilege or sudo."
+  usage # Display the usage function"
+  exit 1 # Exit the script with a status of 1 to indicate an error
+fi
+
+
 # Parse command-line options using getopts to read optional flags and arguments [1].
-while getopts ":u:g:G:i:h:s:" opt;
+while getopts ":u:g:G:ih:s:" opt;
 do
   case $opt in
     u)
@@ -62,7 +65,7 @@ do
       groups="$groups $OPTARG" # Append each group name provided with -G to the groups variable
       ;;
     i)
-      info="$OPTARG"  # Set user information (e.g., full name) if -i is provided
+      info=true # If I option is used, set info to be true. Then prompt user for full name interactively.
       ;;
     h)
       homedir="$OPTARG"  # Set home directory path if -h is provided
@@ -70,7 +73,7 @@ do
     s)
       shell="$OPTARG"  # Set shell path if -s is provided
       ;;
-    ?)1
+    ?)
       echo "Invalid option: -$OPTARG"  # Display an error for invalid options
       usage  # Show usage instructions
       ;;
@@ -86,6 +89,8 @@ shift $((OPTIND - 1))
 
 # Get the username from the remaining positional parameter [1].
 username="$1"  # Store the username provided as the last argument
+
+
 
 # Check if the required username parameter is provided [1].
 if [ -z "$username" ]; # -z checks if $username variable string is empty [3].
@@ -121,8 +126,8 @@ then
   fi
 fi
 
-# If -i option is typed, prompt the user to enter their user's account's full name [1].
-if [ "$info" ];
+# If -i option is typed, prompt the user to enter their user's account's full name.
+if [ "-i" ];
 then
   echo "Provide full name of the user:"  # Prompt for user info of their full name
   read info  # Store user input in the info variable
@@ -160,35 +165,40 @@ fi
 # Copy default skeleton files from /etc/skel to home directory if /etc/skel exists
 if [ -d /etc/skel ];
 then
-  cp -r /etc/skel/. "$homedir"  # Copy all files from /etc/skel to user’s home directory
+  cp -r /etc/skel/. "$homedir"  # Copy all files from /etc/skel to user’s home directory.Use -r to recursively copy the directory and all it's subdirectories and contents inside of it.
 else
-  echo "/etc/skel directory not found. Skipping skeleton file copy."  # Warn if skeleton directory is missing
+  echo "/etc/skel directory not found. /etc/skell did not copy."  # Warn if skeleton directory is missing
 fi
 
-# Add the user to additional groups if any are specified in the groups variable
+
+# Check if the groups variable contains any additional group names using the -n option to check if the string is non-empty.
 if [ -n "$groups" ];
 then
+  # Loop through each group name provided in the groups variable.
   for group in $groups;
   do
-    # Check if the specified group exists in /etc/group
+    # Check if the specified group already exists in the /etc/group file.
     if ! grep -q "^$group:" /etc/group;
-    then
-      echo "Creating group: $group"  # Announce new group creation
-      gid=$((gid + 1))  # Increment GID for each new group
-      echo "$group:x:$gid:" >> /etc/group  # Add new group entry in /etc/group
+    then  # If the group does not exist
+      echo "Creating group: $group"
+      gid=$((gid + 1))  # Increment the GID for each new group to ensure a unique GID.
+      # Add the new group entry to the /etc/group file with the format "groupname:x:gid:"
+      echo "$group:x:$gid:" >> /etc/group
     fi
 
-    # Append the username to the group's member list in /etc/group
-    if grep -q "^$group:" /etc/group;
-    then
-      sed -i "/^$group:/ s/$/,$username/" /etc/group  # Add user to existing group’s members list
+    # Check if the group now exists in the /etc/group file. This should exist as it was just created or it existed before [5].
+    if grep -q "^$group:" /etc/group; then  # If the group exists
+      # Use the sed command to append the username to the group's member list in the /etc/group file [6].
+      # The sed command searches for the line that starts with the group name and appends ",username" to the end of the line [6].
+      sed -i "/^$group:/ s/$/,$username/" /etc/group
     fi
   done
 fi
 
+
 # Set permissions and ownership of the home directory
-chmod 700 "$homedir"  # Restrict access to the home directory (owner only)
-chown "$username:$username" "$homedir"  # Set ownership to the new user and their primary group
+chmod 700 "$homedir"  # Restrict access to the home directory (owner only) [1].
+chown "$username:$username" "$homedir"  # Set ownership to the new user and their primary group [1].
 
 # Set password for the new user by prompting
-passwd "$username"  # Prompt for password for the new user
+passwd "$username"  # Prompt for password for the new user [1].
