@@ -42,7 +42,7 @@ do
     s)  # If -s is provided, set the option to run the symlink creation script
       execute_symlink=1
       ;;
-    \?)  # Handle invalid options by displaying a custom error message and usage information
+    ?)  # Handle invalid options by displaying a custom error message and usage information
       echo "Invalid option: -$OPTARG"
       usage
       ;;
@@ -51,7 +51,7 @@ done
 
 
 # Check if no options were provided. Source: [1]
-if [[ $OPTIND -eq 1 ]];  #OPTIND tracks the index of the next argument to be processed. $OPTIND is defaulted to 1
+if [[ $OPTIND -eq 1 ]];  # OPTIND tracks the index of the next argument to be processed. $OPTIND is defaulted to 1
 then
   echo "NOTE: Make sure to use sudo when executing with -x or -p"
   usage

@@ -8,8 +8,9 @@
 # Version: 1.0
 # Sources:
 #  [1] man sudo | Look at Environment $SUDO_USER - Opens the manual for sudo options and find what $SUDO_USER does
-#  [2] https://www.linode.com/docs/guides/linux-symlinks/ - How to Create Linux Symlinks
+#  [2] https://www.linode.com/docs/guides/linux-symlinks/ | How to Create Linux Symlinks
 #  [3] man ln | -L -s | Opens the manual for symlink options and find what -L and -s does
+#  [4] https://medium.com/@althubianymalek/uid-and-gid-in-executing-a-binary-120e2f67d317 | Difference between UID and EUID
 # ==========================================================================================================================
 
 
@@ -19,7 +20,7 @@ then
   # If the script is run with sudo, set USER_HOME to the home directory of the user who invoked sudo
   USER_HOME="/home/$SUDO_USER"
   echo "Script is being run with sudo by user $SUDO_USER"
-elif [ "$UID" -eq 0 ]; # checks if UID is 0. UID of 0 is the root user.
+elif [ "$EUID" -eq 0 ]; #Checks if the Effective User ID is 0, indicating root user. Used to determine if the script has root access rights [4].
 then
   # If the script is run by the root user directly
   USER_HOME="/root" # set USER_HOME to root user home
@@ -29,6 +30,8 @@ else
   USER_HOME=$HOME # set USER_HOME to current user's home
   echo "Script is being run by the current user $USER"
 fi
+
+
 
 #specifies where the 2420-as2-starting-files is located
 clone_dir=$USER_HOME/acit2420_shell_script/file_system_script/2420-as2-starting-files
