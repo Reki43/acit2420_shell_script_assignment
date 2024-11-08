@@ -5,6 +5,7 @@
 # Initialize variables
 uid=""
 gid=""
+info=""
 homedir=""
 shell="/bin/bash" # Default shell
 username=""
@@ -25,7 +26,7 @@ usage() {
 
 
 # Parse command line options
-while getopts ":u:g:h:s:" opt;
+while getopts ":u:g:i:h:s:" opt;
 do
   case $opt in
     u)
@@ -33,6 +34,9 @@ do
       ;;
     g)
       gid="$OPTARG"
+      ;;
+    i)
+      info=$OPTARG
       ;;
     h)
       homedir="$OPTARG"
@@ -80,6 +84,12 @@ then
   gid=$(grep users /etc/group | cut -d: -f3)
 fi
 
+if [ -z "$info" ];
+then
+  echo Provide full name of the user
+  read info
+fi
+
 if [ -z "$homedir" ];
 then
   homedir=/home/$1
@@ -89,7 +99,25 @@ if [ -z "$shell" ];
 then
   echo "Error: shell is required"
 else
-  shell="/bin/bash"
+  shell="$shell"
 fi
 
 
+# Add user to /etc/passwd and /etc/shadow
+echo $username:x:$uid:$gid:$info:$homedir:$shell >> /etc/passwd
+echo "$username::::::::" >> /etc/shadow
+
+# Copy skeleton files if /etc/skel exists
+if [ -d /etc/skel ];
+then
+  cp -r /etc/skel/. "$homedir"
+else
+  echo "/etc/skel directory not found. Skipping skeleton file copy."
+fi
+
+# Set permissions and ownership
+chmod 755 $homedir
+chown $username:$username $homedir
+
+# Set user password
+passwd $username
