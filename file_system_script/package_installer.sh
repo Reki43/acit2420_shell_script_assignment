@@ -8,6 +8,7 @@
 # Version: 1.0
 # Sources:
 #  [1] man pacman | -Q -s --noconfirm | Opens the manual for pacman and find what -Q, -s, and --noconfirm does
+#  [2] https://stackoverflow.com/questions/26274415/how-can-i-find-out-whether-a-specific-package-is-already-installed-in-arch-linu       | How can I find out, whether a specific package is already installed in Arch Linux
 # ==========================================================================================================================
 
 
@@ -23,10 +24,10 @@ fi
 # Defines an array of package named $packages and uses a for loop to iterate through each package. For each package, it checks if it is already installed by searching the local package database (-Qs). If not, it installs the package using pacman -S --noconfirm [1].
 for package in $(cat $packages);
 do
-# -Q queries the package database. This operation allows you to view installed packages and their files, as well as meta-information about individual packages (dependencies, conflicts, install date, build date, size) [1].
-# -s searches each locally-installed package for names or descriptions that match regexp [1].
+# -Q queries the package database. This operation allows you to view installed packages and their files, as well as meta-information about individual packages (dependencies, conflicts, install date, build date, size) [1] [2].
+# -s searches each locally-installed package for names or descriptions that match regexp [1] [2].
 # --noconfirm bypasses any and all “Are you sure?” messages [1].
-  if pacman -Qs "$package" > /dev/null; # directs the command's output to a null device, which discards any messages or errors
+  if pacman -Qs "$package" > /dev/null; # directs the command's output to a null device, which discards any messages or errors [2].
   then
     echo "$package is already installed"
   else

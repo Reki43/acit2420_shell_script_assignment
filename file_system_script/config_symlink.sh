@@ -11,13 +11,15 @@
 #  [2] https://www.linode.com/docs/guides/linux-symlinks/ | How to Create Linux Symlinks
 #  [3] man ln | -L -s | Opens the manual for symlink options and find what -L and -s does
 #  [4] https://medium.com/@althubianymalek/uid-and-gid-in-executing-a-binary-120e2f67d317 | Difference between UID and EUID
+#  [5] https://stackoverflow.com/questions/59838/how-do-i-check-if-a-directory-exists-or-not-in-a-bash-shell-script | How do I            check if a directory exists or not in a Bash shell script?
+#  [6] https://stackoverflow.com/questions/7358611/get-users-home-directory-when-they-run-a-script-as-root | Get users home               directory when they run a script as root
 # ==========================================================================================================================
 
 
 # Determine the original user's home directory
-if [ "$SUDO_USER" ]; # $SUDO_USER: Set to the login name of the user who invoked sudo. [2]
+if [ "$SUDO_USER" ]; # $SUDO_USER: Set to the login name of the user who invoked sudo [1] [6].
 then
-  # If the script is run with sudo, set USER_HOME to the home directory of the user who invoked sudo
+  # If the script is run with sudo, set USER_HOME to the home directory of the user who invoked sudo [6].
   USER_HOME="/home/$SUDO_USER"
   echo "Script is being run with sudo by user $SUDO_USER"
 elif [ "$EUID" -eq 0 ]; #Checks if the Effective User ID is 0, indicating root user. Used to determine if the script has root access rights [4].
@@ -39,7 +41,7 @@ clone_dir=$USER_HOME/acit2420_shell_script/file_system_script/2420-as2-starting-
 # Symbolic link for config files
 
 # symlink bin
-# Check if $USER_HOME/bin doesn't exist. Create it if necessary.
+# Check if $USER_HOME/bin doesn't exist. Create it if necessary [5].
 if [ ! -d $USER_HOME/bin ]; then
   mkdir -p $USER_HOME/bin
   echo "/bin directory created"
@@ -47,8 +49,8 @@ else
   echo "/bin directory already exists"
 fi
 
-# Check if the symlink exists with the option -L [3]. Create it if necessary [2].
-if [ -L $USER_HOME/bin/sayhi ]; # dereference TARGETs that are symbolic links [3]
+# Check if the symlink exists with the option -L [3]. Create it if necessary [2] [5].
+if [ -L $USER_HOME/bin/sayhi ]; # dereference TARGETs that are symbolic links [3] [5].
 then
   echo "Symlink $USER_HOME/bin/sayhi already exists"
 else
@@ -56,7 +58,7 @@ else
   echo "Symlink $USER_HOME/bin/sayhi created"
 fi
 
-# Check if the symlink exists. Create it if necessary [2].
+# Check if the symlink exists. Create it if necessary [2] [5].
 if [ -L $USER_HOME/bin/install-fonts ];
 then
   echo "Symlink $USER_HOME/bin/install-fonts already exists"
@@ -85,7 +87,7 @@ else
 fi
 
 # symlink config for tmux
-# Check if $USER_HOME/.config/tmux doesn't exist [2]. Create it if necessary [3].
+# Check if $USER_HOME/.config/tmux doesn't exist [2] [5]. Create it if necessary [3].
 if [ ! -d $USER_HOME/.config/tmux ];
 then
   mkdir -p $USER_HOME/.config/tmux
@@ -94,7 +96,7 @@ else
   echo "/.config/tmux directory already exists"
 fi
 
-# Check if the symlink exists [2]. Create it if necessary [2].
+# Check if the symlink exists [2]. Create it if necessary [2] [5].
 if [ -L $USER_HOME/.config/tmux/tmux.conf ];
 then
   echo "Symlink $USER_HOME/.config/tmux/tmux.conf already exists"
@@ -104,7 +106,7 @@ else
 fi
 
 # symlink home bashrc
-# Check if the symlink exists [3]. Create it if necessary [2].
+# Check if the symlink exists [3]. Create it if necessary [2] [5].
 if [ -L $USER_HOME/.bashrc ];
 then
   echo "Symlink $USER_HOME/.bashrc already exists"
