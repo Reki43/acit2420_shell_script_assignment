@@ -51,7 +51,7 @@ done
 
 
 # Check if no options were provided. Source: [1]
-if [[ $OPTIND -eq 1 ]];  #OPTIND tracks the index of the next argument to be processed
+if [[ $OPTIND -eq 1 ]];  #OPTIND tracks the index of the next argument to be processed. $OPTIND is defaulted to 1
 then
   echo "NOTE: Make sure to use sudo when executing with -x or -p"
   usage
