@@ -13,11 +13,12 @@ username=""
 
 # Function to display usage
 usage() {
-  echo "Usage: $0 [-u uid] [-g gid] [-h homedir] [-s shell] username"
+  echo "Usage: $0 [-u uid] [-g gid] [-i info] [-h homedir] [-s shell] username"
   echo ""
   echo "Options:"
   echo "    -u: uid             Specify the user ID (UID) | Omit: Defaults to next available UID"
   echo "    -g: gid             Specify the group ID (GID) | Omit: Defaults to a group with the same name as the username"
+  echo "    -i: info            Add info about the user like full name"
   echo "    -h: homedir         Specifiy home direcrory | Omit: Defaults to /home/username"
   echo "    -s: shell           Specify shell | Omit: Defaults to /bin/bash"
   echo "    username            Specify username of the new user | Required"
@@ -92,7 +93,7 @@ fi
 
 if [ -z "$homedir" ];
 then
-  homedir=/home/$1
+  homedir=/home/$username
 fi
 
 if [ -z "$shell" ];
