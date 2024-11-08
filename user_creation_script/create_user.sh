@@ -26,16 +26,28 @@ usage() {
 }
 
 # Parse command line options
-while getopts ":u:g:G:i:h:s:" opt; do
+while getopts ":u:g:G:i:h:s:" opt;
+do
   case $opt in
-    u) uid="$OPTARG" ;;
-    g) gid="$OPTARG" ;;
-    G) groups="$groups $OPTARG" ;; # Add each specified group to the groups list
-    i) info="$OPTARG" ;;
-    h) homedir="$OPTARG" ;;
-    s) shell="$OPTARG" ;;
-    ?) echo "Invalid option: -$OPTARG" && usage ;;
-    :) echo "Option -$OPTARG requires an argument." && usage ;;
+    u)
+      uid="$OPTARG"
+      ;;
+    g) gid="$OPTARG"
+      ;;
+    G) groups="$groups $OPTARG"# Add each specified group to the groups list
+      ;;
+    i) info="$OPTARG"
+      ;;
+    h) homedir="$OPTARG"
+      ;;
+    s) shell="$OPTARG"
+      ;;
+    ?) echo "Invalid option: -$OPTARG"
+       usage
+       ;;
+    :) echo "Option -$OPTARG requires an argument."
+       usage
+       ;;
   esac
 done
 
@@ -46,22 +58,27 @@ shift $((OPTIND - 1))
 username="$1"
 
 # Check if username is provided
-if [ -z "$username" ]; then
+if [ -z "$username" ];
+then
   echo "Error: Username is required"
   usage
 fi
 
 # Check if uid is empty, if it is, set uid=1000 as default
-if [ -z "$uid" ]; then
+if [ -z "$uid" ];
+then
   uid=1000
-  while cut -d : -f3 /etc/passwd | grep -x $uid > /dev/null; do
+  while cut -d : -f3 /etc/passwd | grep -x $uid > /dev/null;
+  do
     uid=$((uid + 1))
   done
 fi
 
 # Check if gid is specified, if not, create or assign the group based on the username
-if [ -z "$gid" ]; then
-  if ! grep -q "^$username:" /etc/group; then
+if [ -z "$gid" ];
+then
+  if ! grep -q "^$username:" /etc/group;
+  then
     gid=$uid  # Use the same number as the UID
     echo "$username:x:$gid:" >> /etc/group
   else
@@ -69,16 +86,19 @@ if [ -z "$gid" ]; then
   fi
 fi
 
-if [ -z "$info" ]; then
+if [ -z "$info" ];
+then
   echo "Provide full name of the user:"
   read info
 fi
 
-if [ -z "$homedir" ]; then
+if [ -z "$homedir" ];
+then
   homedir=/home/$username
 fi
 
-if [ -z "$shell" ]; then
+if [ -z "$shell" ];
+then
   echo "Error: shell is required"
 else
   shell="$shell"
@@ -89,7 +109,8 @@ echo "$username:x:$uid:$gid:$info:$homedir:$shell" >> /etc/passwd
 echo "$username::::::::" >> /etc/shadow
 
 # Create home directory if it doesn't exist
-if mkdir -p "$homedir"; then
+if mkdir -p "$homedir";
+then
   echo "Home directory $homedir created successfully"
 else
   echo "Failed to create home directory $homedir."
@@ -104,31 +125,34 @@ else
   echo "/etc/skel directory not found. Skipping skeleton file copy."
 fi
 
-# Set permissions and ownership
-chmod 755 "$homedir"
-# Set permissions and ownership
-chown "$username:$username" "$homedir"
-
-
-
-
-# Set user password
-passwd "$username"
 
 # Add the user to additional groups if specified
-if [ -n "$groups" ]; then
+if [ -n "$groups" ];
+then
   for group in $groups; do
     # Check if the group already exists in /etc/group
-    if ! grep -q "^$group:" /etc/group; then
+    if ! grep -q "^$group:" /etc/group;
+    then
       echo "Creating group: $group"
       gid=$((gid + 1))  # Increment gid for each new group
       echo "$group:x:$gid:" >> /etc/group
     fi
 
     # Add user to the group in /etc/group manually
-    if grep -q "^$group:" /etc/group; then
+    if grep -q "^$group:" /etc/group;
+    then
       # Get the current line for the group and add the username to the end of the line
       sed -i "/^$group:/ s/$/,$username/" /etc/group
     fi
   done
 fi
+
+
+# Set permissions and ownership
+chmod 700 "$homedir"
+
+# Set permissions and ownership
+chown "$username:$username" "$homedir"
+
+# Set user password
+passwd "$username"
