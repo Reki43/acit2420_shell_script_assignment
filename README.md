@@ -92,5 +92,39 @@ git clone https://github.com/Reki43/acit2420_shell_script_assignment.git
 
 2. cd into `acit2420_shell_script/` then cd into `file_system_script/`
 
-3. 
+3. Give script files all executable permission by typing the following:
 
+```
+chmod +x config_script.sh config_symlink.sh  package_installer.sh 
+```
+
+## How to Run and Use Script
+
+> [!IMPORTANT]
+> Make sure to run the main script `./config_script.sh` with sudo
+
+### 1. Display Help
+```
+./config_script.sh -h
+```
+This will display the help information.
+
+### 2. Execute Main Script 
+
+```
+sudo ./config_script.sh -x
+```
+This will run the main script to install both packages and create symlinks.
+
+### 3. Execute Package Installer
+
+```
+sudo ./config_script.sh -p
+```
+This will run the package installer script to install all packages listed in `packages.txt` .
+
+### 4. Execute Symlink Script
+```
+sudo ./config_script.sh -s
+```
+This will run the symlink creation script to create symbolic links for the configuration files.
