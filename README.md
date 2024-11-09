@@ -49,8 +49,48 @@ Running this script simplifies a new system setup by automating package installa
 - **kakoune** - A modal code editor inspired by Vim, focusing on efficient multi-cursor workflows. https://wiki.archlinux.org/title/Kakoune
 - **Tmux** - A terminal multiplexer that allows multiple terminal sessions within one window, persisting across SSH connections. https://wiki.archlinux.org/title/Tmux
 
+### Dependencies
 
-## Instructions
+> [!IMPORTANT]
+> Make sure to do these before proceeding to the next step
+
+This project has a few additional dependencies:
+
+> [TIP]
+> If it says "-bash: fzf: command not found" everytime you login in, run the following command in this step.
+
+- **fzf:** A versatile fuzzy finder used in the `bashrc` file found in `/main_configs/home` for our symlink setup. To install `fzf`, run the following code:
+
+```
+sudo pacman -Syu fzf
+```
+
+- **git:** A version control system to clone this repository and access essential files. To install Git, run the following command:
+
+```
+sudo pacman -Syu git
+```
+
+- **nvim** Neovim to modify packages.txt. For instance, can edit the packages.txt file to install other packages. Run the following code to install Neovim:
+
+```
+sudo pacman -Syu neovim
+```
+
+## Clone Instructions
+
+> [!IMPORTANT]
+> This includes both `file_system_script` and `user_creation_script`
+
+1. Copy and run the command below to clone this repository:
+```
+git clone https://github.com/Reki43/acit2420_shell_script_assignment.git
+```
 
 > [!CAUTION]
-> Do not change anything 
+> Do not change anything in the `2420-as2-starting-files/`  directory. May cause errors when running as it'll mess up the symlink and set paths
+
+2. cd into `acit2420_shell_script/` then cd into `file_system_script/`
+
+3. 
+
