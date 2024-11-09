@@ -111,6 +111,6 @@ if [ -L $USER_HOME/.bashrc ];
 then
   echo "Symlink $USER_HOME/.bashrc already exists"
 else
-  ln -s $clone_dir/home/bashrc $USER_HOME/.bashrc
+  ln -sf $clone_dir/home/bashrc $USER_HOME/.bashrc
   echo "Symlink $USER_HOME/.bashrc created"
 fi

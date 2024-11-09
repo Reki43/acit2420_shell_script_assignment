@@ -32,14 +32,25 @@ Running this script simplifies a new system setup by automating package installa
 
 ### Folder Content
 
-1. `config_script.sh` - Main bash script
-2. `config_symlink.sh` - Script to symlink `2420-as2-starting-files/` to user's directory
-3. `package_installer.sh` - Script to install the packages in `packages.txt`
-4. packages.txt - A text file that contains `kakoune` and `tmux`
-5. `2420-as2-starting-files` The config directory used for symlink. Includes `/bin` , `/config` , `home` directories. 
+1. **config_script.sh** - Main bash script
+2. **config_symlink.sh** - Script to symlink `2420-as2-starting-files/` to user's directory
+3. **package_installer.sh** - Script to install the packages in `packages.txt`
+4. **packages.txt** - A text file that contains `kakoune` and `tmux`
+5. **2420-as2-starting-files** The config directory used for symlink. Includes `/bin` , `/config` , `home` directories. 
 
 
-### Scripting Information
+### Script Information
+
+1. **config_script.sh** - The main script that sets up and runs both `package_installer.sh` and `config_symlink.sh` script. Includes options to run each script individually.  
+
+2. **config_symlink.sh** - Creates symbolic links from configuration files in `2420-as2-starting-files/` to the user's directories (e.g., ~/bin, ~/.config, and ~/.bashrc).
+
+3. **package_installer.sh** - Installs `kakoune` and `tmux` specified in `packages.txt` using the pacman package manager.
+- **kakoune** - A modal code editor inspired by Vim, focusing on efficient multi-cursor workflows. https://wiki.archlinux.org/title/Kakoune
+- **Tmux** - A terminal multiplexer that allows multiple terminal sessions within one window, persisting across SSH connections. https://wiki.archlinux.org/title/Tmux
 
 
+## Instructions
 
+> [!CAUTION]
+> Do not change anything 
