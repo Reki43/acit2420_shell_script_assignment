@@ -9,10 +9,10 @@
 
 
 ## Table of Contents
-
-    
-1. [Uploading a Custom Image onto DigitalOcean](#uploading-a-custom-image-onto-digitalocean)
-
+1. [Project 1 - System Setup Scripts](#project-1---system-setup-scripts)
+    - [How to Run and Use File System Script](#how-to-run-and-use-file-system-script)
+2. [Project 2 - User Creation Script](#project-2---user-creation-script)
+    - [How to Run and Use User Creation Script](#how-to-run-and-use-user-creation-script)
 
 # Project 1 - System Setup Scripts
 
@@ -20,7 +20,7 @@
 
 
 ### Objective
-Running this script simplifies a new system setup by automating package installation and configuration file management. 
+Simplifies a new system setup by automating package installation and configuration file management. 
 
 > [!IMPORTANT]
 > This script only works for an Arch Linux distribution
@@ -56,7 +56,7 @@ Running this script simplifies a new system setup by automating package installa
 
 This project has a few additional dependencies:
 
-> [TIP]
+> [!TIP]
 > If it says "-bash: fzf: command not found" everytime you login in, run the following command in this step.
 
 - **fzf:** A versatile fuzzy finder used in the `bashrc` file found in `/main_configs/home` for our symlink setup. To install `fzf`, run the following code:
@@ -80,7 +80,7 @@ sudo pacman -Syu neovim
 ## Clone Instructions
 
 > [!IMPORTANT]
-> This includes both `file_system_script` and `user_creation_script`
+> This clones both `file_system_script` and `user_creation_script`
 
 1. Copy and run the command below to clone this repository:
 ```
@@ -98,7 +98,18 @@ git clone https://github.com/Reki43/acit2420_shell_script_assignment.git
 chmod +x config_script.sh config_symlink.sh  package_installer.sh 
 ```
 
-## How to Run and Use Script
+## How to Run and Use File System Script
+
+### Usage
+```
+Usage: sudo ./config_script.sh [-h] [-x] [-p] [-s]
+Syntax: sudo ./config_script.sh [OPTION]
+ 
+    -h, --help          Display help
+    -x  --execute       Execute the main script to install both packages
+    -p, --packages      Execute package installer
+    -s, --symlink       Execute symlink creation script
+```
 
 > [!IMPORTANT]
 > Make sure to run the main script `./config_script.sh` with sudo
@@ -128,3 +139,79 @@ This will run the package installer script to install all packages listed in `pa
 sudo ./config_script.sh -s
 ```
 This will run the symlink creation script to create symbolic links for the configuration files.
+
+
+
+# Project 2 - User Creation Script
+
+## User Creation Overview
+
+
+### Objective
+Simplifies the process of setting up a new user by creating a script that handles shell specification, home directory creation, copying of /etc/skel contents, adding to additional groups, and setting a password using the passwd utility.
+
+### Requirements 
+1. Must have root user access or sudo privileges with executable permissions to run the scripts.
+
+### Folder Content
+**create_user.sh*** - Main create user script 
+
+### Script Information
+
+**create_user.sh*** - This script simplifies the process of creating a new user on a Linux system. It initializes user-specific options, ensures the script is run with root privileges, and handles command-line options for setting user ID, group ID, additional groups, home directory, and shell. It adds the new user to the system, creates their home directory, copies skeleton files, adds the user to specified groups, sets the correct permissions, and prompts for a password.
+
+## How to Run and Use User Creation Script
+
+> [!IMPORTANT]
+> Don't forget to give `./create_user.sh` execute permission by typing chmod +x ./create_user.sh
+
+### Usage
+
+```
+Usage: sudo ./create_user.sh [-u uid] [-g gid] [-G group1 -G group2 -G group3 -G ...] [-i] [-h homedir] [-s shell] username
+Syntax: create_user [OPTION] [ARGUMENTS]
+
+Options:
+    -u: uid             Specify the user ID (UID) | Omit: Defaults to next available UID
+    -g: gid             Specify the group ID (GID) | Omit: Defaults to same GID as username's UID
+    -G: groups          Specify one or more groups | Omit: User will not be added to additional groups
+    -i: info            Prompts user to enter user's full name | Omit: Info about user will be null
+    -h: homedir         Specify home directory | Omit: Defaults to /home/username
+    -s: shell           Specify login shell | Omit: Defaults to /bin/bash
+    username            Specify username for new user | Required
+```
+
+### 1. Create a New User with Default Settings
+```
+sudo ./create_user.sh newuser
+```
+This command creates a new user named newuser with default settings, including UID, GID, home directory, and login shell.
+
+### 2. Create a New User with a Specified UID and GID
+```
+sudo ./create_user.sh -u 1001 -g 1001 newuser
+```
+This command creates a new user named newuser with a specified UID and GID of 1001.
+
+### 3. Create a New User and Add to Additional Groups
+```
+sudo ./create_user.sh -G group1 -G group2 newuser
+```
+This command creates a new user named newuser and adds them to group1 and group2.
+
+### 4. Create a New User with a Custom Home Directory and Shell
+```
+sudo ./create_user.sh -h /custom/home -s /bin/zsh newuser
+```
+This command creates a new user named newuser with a custom home directory /custom/home and a custom login shell /bin/zsh.
+
+### 5. Create a New User and Prompt for Full Name
+```
+sudo ./create_user.sh -i newuser
+```
+This command creates a new user named newuser and prompts the user to enter the new user's full name. 
+
+
+
+
+
