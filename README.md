@@ -215,3 +215,32 @@ This command creates a new user named newuser and prompts the user to enter the 
 
 
 
+# References
+
+---
+
+### Bash & Shell Scripting
+- [Bash Manual](https://www.gnu.org/software/bash/manual/bash.html) - Official GNU Bash documentation.
+- [Advanced Bash Guide](https://tldp.org/LDP/abs/html/) - Comprehensive guide to Bash scripting.
+- [Working with Options](https://learning.oreilly.com/videos/bash-shell-scripting/9780137689064/9780137689064-BSS2_04_10_01/) - O'Reilly video covering examples of working with options.
+- [Primary Expressions with If Statements](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/sect_07_01.html) - Basic `if` statement usage in Bash.
+- [Cut Command in Linux](https://www.geeksforgeeks.org/cut-command-linux-examples/) - Examples and usage of the `cut` command.
+- [Using Grep & Regular Expressions](https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux) - Searching with `grep` and regular expressions.
+- [Sed Stream Editor Basics](https://www.digitalocean.com/community/tutorials/the-basics-of-using-the-sed-stream-editor-to-manipulate-text-in-linux) - Basic guide to text manipulation with `sed`.
+
+### User and Permissions Management
+- [UID and EUID Differences](https://medium.com/@althubianymalek/uid-and-gid-in-executing-a-binary-120e2f67d317) - Explanation of UID and effective UID in executing binaries.
+- `man sudo` - Check `$SUDO_USER` environment variable for information on the user who invoked `sudo`.
+
+### File & Directory Operations
+- [Checking if a Directory Exists](https://stackoverflow.com/questions/59838/how-do-i-check-if-a-directory-exists-or-not-in-a-bash-shell-script) - Methods to check directory existence in Bash.
+- [Getting the User's Home Directory](https://stackoverflow.com/questions/7358611/get-users-home-directory-when-they-run-a-script-as-root) - Retrieving home directory when running as root.
+- [Creating Linux Symlinks](https://www.linode.com/docs/guides/linux-symlinks/) - Instructions on creating symbolic links in Linux.
+- `man ln` - Use `-L` and `-s` options for creating symlinks.
+
+### Package Management (Arch Linux)
+- [Arch Linux Pacman](https://wiki.archlinux.org/title/pacman) - Official documentation for the pacman package manager.
+- `man pacman` - Options like `-Q`, `-s`, and `--noconfirm` for package queries and management.
+- [Checking for Installed Packages](https://stackoverflow.com/questions/26274415/how-can-i-find-out-whether-a-specific-package-is-already-installed-in-arch-linu) - Methods for checking package installation status in Arch Linux.
+
+---
