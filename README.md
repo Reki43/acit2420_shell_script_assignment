@@ -14,6 +14,11 @@
 2. [Project 2 - User Creation Script](#project-2---user-creation-script)
     - [How to Run and Use User Creation Script](#how-to-run-and-use-user-creation-script)
 
+3. [References](#references)
+
+
+
+---
 # Project 1 - System Setup Scripts
 
 ## System Setup Overview
@@ -141,8 +146,9 @@ sudo ./config_script.sh -s
 This will run the symlink creation script to create symbolic links for the configuration files.
 
 
-
+---
 # Project 2 - User Creation Script
+
 
 ## User Creation Overview
 
@@ -243,4 +249,7 @@ This command creates a new user named newuser and prompts the user to enter the 
 - `man pacman` - Options like `-Q`, `-s`, and `--noconfirm` for package queries and management.
 - [Checking for Installed Packages](https://stackoverflow.com/questions/26274415/how-can-i-find-out-whether-a-specific-package-is-already-installed-in-arch-linu) - Methods for checking package installation status in Arch Linux.
 
+### Tools & Utilities
+- [Kakoune](https://wiki.archlinux.org/title/Kakoune) - A modal code editor inspired by Vim, focusing on efficient multi-cursor workflows.
+- [Tmux](https://wiki.archlinux.org/title/Tmux) - A terminal multiplexer that allows multiple terminal sessions within one window, persisting across SSH connections.
 ---
