@@ -13,8 +13,6 @@
 #  [4] https://www.geeksforgeeks.org/cut-command-linux-examples/ | cut command in Linux
 #  [5] https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux | Using Grep & Regular Expressions to Search for Text Patterns
 #  [6] https://www.digitalocean.com/community/tutorials/the-basics-of-using-the-sed-stream-editor-to-manipulate-text-in-linux | The Basics of Using the Sed Stream Editor to Manipulate Text
-#
-#
 # ==========================================================================================================================
 
 
@@ -29,7 +27,7 @@ groups=""       # Stores additional groups if specified using the -G option
 
 # Function to display script usage instructions for help [1].
 usage() {
-  echo "Usage: $0 [-u uid] [-g gid] [-G group1 group2 group3] [-i] [-h homedir] [-s shell] username"
+  echo "Usage: $0 [-u uid] [-g gid] [-G group1 -G group2 -G group3 -G ...] [-i] [-h homedir] [-s shell] username"
   echo ""
   echo "Options:"
   echo "    -u: uid             Specify the user ID (UID) | Omit: Defaults to next available UID"
@@ -76,10 +74,12 @@ do
     ?)
       echo "Invalid option: -$OPTARG"  # Display an error for invalid options
       usage  # Show usage instructions
+      exit 1
       ;;
     :)
       echo "Option -$OPTARG requires an argument."  # Display error if option is missing an argument
       usage  # Show usage instructions
+      exit 1
       ;;
   esac
 done
@@ -187,10 +187,15 @@ then
     fi
 
     # Check if the group now exists in the /etc/group file. This should exist as it was just created or it existed before [5].
-    if grep -q "^$group:" /etc/group; then  # If the group exists
+    if grep -q "^$group:" /etc/group;
+    then  # If the group exists
       # Use the sed command to append the username to the group's member list in the /etc/group file [6].
       # The sed command searches for the line that starts with the group name and appends ",username" to the end of the line [6].
+      # for s/$/,$username/ it substitutes the end of the line with $ with ,$username, which adds the username variable value at the end.
       sed -i "/^$group:/ s/$/,$username/" /etc/group
+      echo "Added $username to $group"
+    else
+      echo "$username is already a member of $group"
     fi
   done
 fi
